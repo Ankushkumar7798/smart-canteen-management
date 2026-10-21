@@ -1,0 +1,807 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Canteen Management System</title>
+<style>
+:root{--blue:#174ea6;--dark:#102544;--bg:#f3f6fb;--green:#168653;--red:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172337}
+button,input,select{font:inherit}
+button{border:0;border-radius:9px;padding:11px 15px;cursor:pointer;background:var(--blue);color:white;font-weight:600}
+button:hover{filter:brightness(.92)}
+button.secondary{background:#e7eef9;color:var(--dark)}
+button.danger{background:var(--red)}
+button.success{background:var(--green)}
+input,select{width:100%;padding:11px;border:1px solid #d5dce8;border-radius:8px;margin:6px 0 12px;background:white}
+label{font-size:13px;font-weight:700}
+header{background:var(--dark);color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header h2{margin:0;font-size:21px}
+header small{color:#cfdbed}
+.container{max-width:1200px;margin:auto;padding:22px}
+.card{background:white;padding:20px;border-radius:14px;box-shadow:0 3px 16px #1223440b;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.food{border:1px solid #e3e9f2;border-radius:12px;padding:16px}
+.food .emoji{font-size:40px}
+.food h3{margin:8px 0}
+.price{font-size:21px;font-weight:800;color:var(--green)}
+.muted{color:#6b778a;font-size:13px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tabs button{background:#e1e9f7;color:var(--dark)}
+.tabs button.active{background:var(--blue);color:white}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8eef8;font-size:12px;font-weight:bold}
+.notice{padding:12px;background:#edf5ff;border-radius:9px;margin:10px 0;font-size:14px}
+.hidden{display:none!important}
+.login{max-width:490px;margin:45px auto}
+h1{font-size:27px}
+h2{font-size:21px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:11px 8px;border-bottom:1px solid #e6ebf3;text-align:left}
+th{background:#f5f7fb}
+.table-wrap{overflow-x:auto}
+footer{text-align:center;padding:24px;color:#7b8798;font-size:12px}
+#toast{position:fixed;bottom:18px;right:18px;background:#102544;color:white;padding:14px 18px;border-radius:10px;display:none;max-width:90%;z-index:20}
+.stat{font-size:28px;font-weight:800;margin:6px 0}
+.cartline{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+@media(max-width:600px){.container{padding:12px}header{padding:15px}.card{padding:15px}h1{font-size:23px}table{font-size:12px}th,td{padding:8px 5px}}
+
+/* PROFESSIONAL SMART CANTEEN THEME */
+body {
+  background: #f3f6fb;
+  color: #19283f;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.main-header {
+  background: linear-gradient(120deg, #102544, #174ea6);
+  color: white;
+  padding: 18px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 18px #10254420;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #174ea6;
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+  font-weight: 900;
+  border: 2px solid #b9e7ed;
+  flex-shrink: 0;
+}
+
+.brand h2 {
+  margin: 0 0 5px;
+  font-size: 24px;
+  letter-spacing: .2px;
+}
+
+.brand small {
+  color: #e0eaff;
+  font-size: 12px;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #b9e7ed;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logout-btn {
+  background: white;
+  color: #174ea6;
+}
+
+.container {
+  max-width: 1240px;
+  padding: 28px 22px;
+}
+
+.card {
+  border: 1px solid #e5eaf2;
+  border-radius: 16px;
+  box-shadow: 0 5px 22px rgba(22, 47, 83, .06);
+  padding: 23px;
+}
+
+.card h1, .card h2 {
+  color: #152e53;
+}
+
+.tabs {
+  gap: 10px;
+  padding: 7px 0;
+}
+
+.tabs button {
+  border-radius: 10px;
+  padding: 12px 17px;
+  transition: background .2s, transform .2s;
+}
+
+.tabs button:hover {
+  transform: translateY(-1px);
+}
+
+.tabs button.active {
+  background: #174ea6;
+  color: white;
+  box-shadow: 0 4px 12px #174ea630;
+}
+
+.food {
+  background: #fff;
+  border: 1px solid #e2e9f3;
+  border-radius: 15px;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.food:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px #152e5312;
+}
+
+button {
+  border-radius: 9px;
+  transition: filter .2s, transform .2s;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+input, select {
+  border-color: #d8e1ee;
+  outline-color: #174ea6;
+}
+
+input:focus, select:focus {
+  border-color: #174ea6;
+  box-shadow: 0 0 0 3px #174ea615;
+}
+
+.price {
+  color: #13805a;
+}
+
+.badge {
+  background: #eaf2ff;
+  color: #174ea6;
+}
+
+.notice {
+  border-left: 4px solid #174ea6;
+  background: #eef5ff;
+  line-height: 1.6;
+}
+
+table th {
+  background: #edf3fc;
+  color: #17345c;
+}
+
+table tr:hover td {
+  background: #f8faff;
+}
+
+.login {
+  border-top: 5px solid #174ea6;
+}
+
+footer {
+  padding: 28px 12px;
+}
+
+@media (max-width: 600px) {
+  .main-header {
+    padding: 15px;
+  }
+
+  .brand h2 {
+    font-size: 20px;
+  }
+
+  .brand small {
+    font-size: 11px;
+  }
+
+  .container {
+    padding: 14px 10px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+}
+
+/* Hide the duplicate title below the main header */
+main.container > h2,
+main.container > small {
+  display: none;
+}
+
+
+/* Refined responsive layout and food photography */
+html { scroll-behavior: smooth; }
+body { min-height: 100vh; background: #f4f7fc; }
+.main-header { position: relative; padding: 17px max(5%, calc((100% - 1240px)/2)); }
+.brand-logo { box-shadow: 0 5px 18px #061a3830; }
+.user-area { margin-left: auto; }
+#userLabel { font-size: 14px; font-weight: 600; }
+.container { width: 100%; }
+.login-shell {
+  max-width: 1000px; padding: 0; overflow: hidden; margin: 38px auto;
+  display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #e1e8f2;
+  border-radius: 22px; border-top: 0; box-shadow: 0 20px 55px rgba(21,46,83,.12);
+}
+.login-intro {
+  padding: 42px 38px; color: #fff; background:
+  radial-gradient(circle at 90% 10%, #ffffff22 0 8%, transparent 8.5%),
+  linear-gradient(145deg, #102544 0%, #174ea6 65%, #167d91 130%);
+  display: flex; flex-direction: column; justify-content: center; min-height: 520px;
+}
+.login-mark { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 17px; background: #fff; color: #174ea6; font-weight: 900; font-size: 23px; margin-bottom: 34px; }
+.eyebrow { font-size: 11px; letter-spacing: 1.7px; font-weight: 800; color: #b9e7ed; }
+.login-intro h1 { color: #fff; font-size: clamp(30px, 3.5vw, 43px); line-height: 1.13; margin: 15px 0; letter-spacing: -.8px; }
+.login-intro p { color: #e0eaff; line-height: 1.7; max-width: 340px; }
+.login-perks { display: grid; gap: 13px; margin-top: 24px; font-size: 14px; color: #f2f8ff; }
+.login-panel { padding: 42px 38px 28px; align-self: center; }
+.login-panel h2 { margin: 18px 0 7px; font-size: 27px; }
+.login-panel > .muted { line-height: 1.6; margin-bottom: 27px; }
+.login-panel label { display: block; margin-top: 12px; color: #263b59; }
+.login-panel input { padding: 14px; margin-top: 8px; margin-bottom: 12px; }
+.login-submit { padding: 14px 17px; margin-top: 8px; display: flex; justify-content: center; gap: 12px; align-items: center; background: linear-gradient(100deg,#174ea6,#2166c6); box-shadow: 0 7px 16px #174ea62b; }
+.demo-details { margin-top: 19px; border: 1px solid #e1e8f2; border-radius: 10px; padding: 12px; }
+.demo-details summary { cursor: pointer; font-weight: 700; color: #174ea6; font-size: 13px; }
+.demo-details .notice { margin-bottom: 0; }
+.security-note { font-size: 11px; margin-top: 16px; }
+#appPage .card:first-child { background: linear-gradient(120deg,#fff,#f7faff); }
+#content .card { margin-bottom: 18px; }
+.food { padding: 0; overflow: hidden; min-width: 0; }
+.food-photo-wrap { height: 175px; position: relative; overflow: hidden; background: linear-gradient(135deg,#e8eef7,#f7e9d8); }
+.food-photo { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .35s ease; }
+.food:hover .food-photo { transform: scale(1.045); }
+.food-category { position: absolute; top: 12px; left: 12px; border-radius: 30px; padding: 6px 10px; font-size: 11px; font-weight: 800; color: #17345c; background: #ffffffed; box-shadow: 0 2px 8px #10254418; }
+.food-details { padding: 16px; }
+.food-details h3 { font-size: 17px; margin: 2px 0 7px; color: #152e53; }
+.food-details .muted { margin: 0 0 16px; }
+.food-details .price { font-size: 21px; }
+.food-details button { white-space: nowrap; padding: 10px 12px; font-size: 13px; }
+#menuSearch { max-width: 440px; }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #7cb8ff; outline-offset: 2px; }
+footer { margin-top: 14px; }
+@media (max-width: 700px) {
+  .main-header { padding: 14px; gap: 12px; }
+  .brand { gap: 10px; }
+  .brand-logo { width: 46px; height: 46px; border-radius: 12px; font-size: 20px; }
+  .brand h2 { font-size: 19px; }
+  .brand small { display: block; max-width: 230px; line-height: 1.4; }
+  .brand-subtitle { font-size: 10px; }
+  .user-area { width: 100%; justify-content: space-between; }
+  .login-shell { grid-template-columns: 1fr; margin: 12px auto 24px; }
+  .login-intro { min-height: 0; padding: 25px 23px; }
+  .login-mark { margin-bottom: 20px; width: 48px; height: 48px; }
+  .login-intro h1 { font-size: 31px; }
+  .login-perks { grid-template-columns: 1fr; gap: 8px; margin-top: 14px; }
+  .login-panel { padding: 27px 22px 22px; }
+  .food-photo-wrap { height: 160px; }
+  .grid { grid-template-columns: repeat(auto-fit,minmax(145px,1fr)); gap: 11px; }
+  #content .food-details { padding: 12px; }
+  .food-details .row { align-items: flex-start; }
+  .food-details button { padding: 9px; }
+}
+@media (max-width: 380px) {
+  .grid { grid-template-columns: 1fr; }
+  .food-photo-wrap { height: 190px; }
+}
+
+</style>
+</head>
+<body>
+<header class="main-header">
+  <div class="brand">
+    <div class="brand-logo">SC</div>
+    <div>
+      <h2>Smart Canteen</h2>
+      <small>B. P. Poddar Institute of Management and Technology</small>
+      <div class="brand-subtitle">IT Department · Semester V · 2026–27</div>
+    </div>
+  </div>
+
+  <div id="headerUser" class="hidden user-area">
+    <span id="userLabel"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main class="container">
+<section id="loginPage" class="login login-shell card">
+  <div class="login-intro">
+    <div class="login-mark">SC</div>
+    <span class="eyebrow">CAMPUS DINING, MADE SIMPLE</span>
+    <h1>Good food.<br>Great campus days.</h1>
+    <p>Order your favourites, track your token, and enjoy a smarter canteen experience.</p>
+    <div class="login-perks">
+      <span>✓ Easy food ordering</span>
+      <span>✓ Live order status</span>
+      <span>✓ Quick campus service</span>
+    </div>
+  </div>
+  <div class="login-panel">
+    <span class="badge">COLLEGE PORTAL</span>
+    <h2>Welcome back 👋</h2>
+    <p class="muted">Sign in with your college demo account to continue.</p>
+    <label for="loginId">College ID</label>
+    <input id="loginId" placeholder="e.g. STU101" autocomplete="username">
+    <label for="loginPassword">Password</label>
+    <input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password">
+    <button class="login-submit" style="width:100%" onclick="login()">Sign in <span aria-hidden="true">→</span></button>
+    <details class="demo-details">
+      <summary>View demo login accounts</summary>
+      <div class="notice">
+        <b>Demo credentials</b><br>
+        Student: <code>STU101</code> / <code>1234</code><br>
+        Teacher: <code>TEA101</code> / <code>1234</code><br>
+        Canteen Staff: <code>CAN101</code> / <code>1234</code><br>
+        Delivery Staff: <code>DEL101</code> / <code>1234</code><br>
+        Admin: <code>ADM101</code> / <code>1234</code>
+      </div>
+    </details>
+    <p class="muted security-note">Academic demo only. Do not use real passwords or payment details.</p>
+  </div>
+</section>
+
+<section id="appPage" class="hidden">
+  <div class="card">
+    <div class="row">
+      <div><h1 id="welcomeTitle">Dashboard</h1><p class="muted" id="roleDescription"></p></div>
+      <div class="badge" id="roleBadge"></div>
+    </div>
+  </div>
+  <nav id="tabs" class="tabs"></nav>
+  <div id="content"></div>
+</section>
+</main>
+<footer>Smart Canteen Management System · College Project Demo</footer>
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+/* Demo users. In production, authenticate users on a secure server. */
+const USERS = [
+ {id:"STU101",password:"1234",name:"Demo Student",role:"Student"},
+ {id:"TEA101",password:"1234",name:"Demo Teacher",role:"Teacher"},
+ {id:"CAN101",password:"1234",name:"Canteen Staff",role:"Canteen Staff"},
+ {id:"DEL101",password:"1234",name:"Delivery Staff",role:"Delivery Staff"},
+ {id:"ADM101",password:"1234",name:"Administrator",role:"Admin"}
+];
+const DEFAULT_MENU = [
+ {id:1,name:"Veg Sandwich",category:"Snacks",price:40,stock:20,emoji:"🥪",active:true},
+ {id:2,name:"Masala Dosa",category:"Meals",price:70,stock:15,emoji:"🥞",active:true},
+ {id:3,name:"Veg Burger",category:"Snacks",price:60,stock:18,emoji:"🍔",active:true},
+ {id:4,name:"Fried Rice",category:"Meals",price:80,stock:12,emoji:"🍚",active:true},
+ {id:5,name:"Tea",category:"Drinks",price:15,stock:50,emoji:"☕",active:true},
+ {id:6,name:"Cold Coffee",category:"Drinks",price:45,stock:20,emoji:"🥤",active:true},
+ {id:7,name:"Samosa",category:"Snacks",price:15,stock:30,emoji:"🥟",active:true},
+ {id:8,name:"Paneer Roll",category:"Snacks",price:65,stock:12,emoji:"🌯",active:true}
+];
+const DEFAULT_LOCATIONS = ["Staff Room","Classroom Block A","Classroom Block B","Training Room"];
+
+function load(key,fallback){
+ try {
+  const value=localStorage.getItem("scms_"+key);
+  return value===null?fallback:JSON.parse(value);
+ } catch(e){return fallback}
+}
+function save(key,value){
+ localStorage.setItem("scms_"+key,JSON.stringify(value));
+}
+let menu=load("menu",DEFAULT_MENU);
+let orders=load("orders",[]);
+let locations=load("locations",DEFAULT_LOCATIONS);
+let currentUser=null;
+let cart={};
+let activeTab="";
+let idleTimer=null;
+
+function persist(){
+ save("menu",menu);
+ save("orders",orders);
+ save("locations",locations);
+}
+function money(n){return "₹"+Number(n).toFixed(2)}
+function esc(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function toast(message){
+ const el=document.getElementById("toast");
+ el.textContent=message;el.style.display="block";
+ setTimeout(()=>el.style.display="none",2600);
+}
+function login(){
+ const id=document.getElementById("loginId").value.trim().toUpperCase();
+ const pw=document.getElementById("loginPassword").value;
+ const user=USERS.find(u=>u.id===id&&u.password===pw);
+ if(!user){toast("Invalid demo ID or password");return}
+ currentUser={id:user.id,name:user.name,role:user.role};
+ cart={};activeTab="";
+ document.getElementById("loginPage").classList.add("hidden");
+ document.getElementById("appPage").classList.remove("hidden");
+ document.getElementById("headerUser").classList.remove("hidden");
+ document.getElementById("userLabel").textContent=user.name+" · "+user.role;
+ document.getElementById("welcomeTitle").textContent="Hello, "+user.name+"!";
+ document.getElementById("roleDescription").textContent="Manage your canteen activities from the dashboard.";
+ document.getElementById("roleBadge").textContent=user.role;
+ buildTabs();
+ render();
+ resetIdle();
+}
+document.getElementById("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+document.getElementById("loginId").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+
+function logout(){
+ currentUser=null;cart={};clearTimeout(idleTimer);
+ document.getElementById("appPage").classList.add("hidden");
+ document.getElementById("headerUser").classList.add("hidden");
+ document.getElementById("loginPage").classList.remove("hidden");
+ document.getElementById("loginPassword").value="";
+ document.getElementById("loginId").value="";
+}
+function resetIdle(){
+ clearTimeout(idleTimer);
+ // Demo kiosk timeout: automatic logout after 3 minutes without activity.
+ idleTimer=setTimeout(()=>{if(currentUser){logout();toast("Session expired. Please login again.")}},180000);
+}
+["click","keydown","mousemove","touchstart"].forEach(ev=>document.addEventListener(ev,()=>{if(currentUser)resetIdle()},{passive:true}));
+
+function tabsForRole(){
+ if(!currentUser)return [];
+ switch(currentUser.role){
+ case "Student":return [["menu","Food Menu"],["cart","My Cart"],["orders","My Orders"]];
+ case "Teacher":return [["menu","Food Menu"],["cart","My Cart"],["orders","My Orders"]];
+ case "Canteen Staff":return [["kitchen","Kitchen Monitor"],["inventory","Inventory"],["orders","All Orders"]];
+ case "Delivery Staff":return [["delivery","Delivery Tasks"]];
+ case "Admin":return [["overview","Overview"],["menuadmin","Manage Menu"],["orders","All Orders"],["inventory","Inventory"],["users","Demo Users"],["locations","Delivery Locations"],["reports","Reports"]];
+ default:return [];
+ }
+}
+function buildTabs(){
+ const el=document.getElementById("tabs");
+ el.innerHTML=tabsForRole().map(([id,label])=>
+ `<button class="${activeTab===id?"active":""}" onclick="goTab('${id}')">${label}</button>`
+ ).join("");
+ if(!tabsForRole().some(t=>t[0]===activeTab))activeTab=tabsForRole()[0][0];
+ el.innerHTML=tabsForRole().map(([id,label])=>
+ `<button class="${activeTab===id?"active":""}" onclick="goTab('${id}')">${label}</button>`
+ ).join("");
+}
+function goTab(tab){activeTab=tab;buildTabs();render()}
+function render(){
+ if(!currentUser)return;
+ const c=document.getElementById("content");
+ switch(activeTab){
+ case "menu":c.innerHTML=menuPage();break;
+ case "cart":c.innerHTML=cartPage();break;
+ case "orders":c.innerHTML=ordersPage();break;
+ case "kitchen":c.innerHTML=kitchenPage();break;
+ case "delivery":c.innerHTML=deliveryPage();break;
+ case "inventory":c.innerHTML=inventoryPage();break;
+ case "overview":c.innerHTML=overviewPage();break;
+ case "menuadmin":c.innerHTML=menuAdminPage();break;
+ case "users":c.innerHTML=usersPage();break;
+ case "locations":c.innerHTML=locationsPage();break;
+ case "reports":c.innerHTML=reportsPage();break;
+ default:c.innerHTML="<div class='card'>Select a dashboard tab.</div>";
+ }
+}
+
+function menuPage(){
+ const available=menu.filter(m=>m.active&&m.stock>0);
+ return `<div class="card"><div class="row"><div><h2>Food Menu</h2><p class="muted">Choose items and add them to your cart.</p></div><span class="badge">${available.length} available items</span></div>
+ <input id="menuSearch" placeholder="Search food..." oninput="filterMenu()">
+ <div id="foodGrid" class="grid">${available.map(foodCard).join("")}</div></div>`;
+}
+function foodCard(m){
+ return `<article class="food">
+ <div class="emoji">${esc(m.emoji)}</div><h3>${esc(m.name)}</h3>
+ <p class="muted">${esc(m.category)} · Stock: ${m.stock}</p>
+ <div class="row"><span class="price">${money(m.price)}</span>
+ <button onclick="addCart(${m.id})">Add to Cart</button></div></article>`;
+}
+function filterMenu(){
+ const q=document.getElementById("menuSearch").value.toLowerCase();
+ document.getElementById("foodGrid").innerHTML=menu.filter(m=>m.active&&m.stock>0&&m.name.toLowerCase().includes(q)).map(foodCard).join("");
+}
+function addCart(id){
+ const m=menu.find(x=>x.id===id);
+ if(!m||!m.active||m.stock<=0){toast("Item unavailable");return}
+ const qty=cart[id]||0;
+ if(qty>=m.stock){toast("Not enough stock");return}
+ cart[id]=qty+1;toast(m.name+" added to cart");
+}
+function cartPage(){
+ const entries=Object.entries(cart).filter(([id,q])=>q>0);
+ if(!entries.length)return `<div class="card"><h2>My Cart</h2><p>Your cart is empty.</p><button onclick="goTab('menu')">Browse Menu</button></div>`;
+ let total=0;
+ const lines=entries.map(([id,q])=>{
+  const m=menu.find(x=>x.id===Number(id));if(!m)return "";
+  const sub=m.price*q;total+=sub;
+  return `<div class="cartline"><div><b>${esc(m.name)}</b><br><span class="muted">${money(m.price)} each</span></div>
+  <div><button class="secondary" onclick="changeQty(${m.id},-1)">−</button> ${q} <button class="secondary" onclick="changeQty(${m.id},1)">+</button> <b>${money(sub)}</b></div></div>`;
+ }).join("");
+ const isTeacher=currentUser.role==="Teacher";
+ return `<div class="card"><h2>My Cart</h2>${lines}<hr><div class="row"><h2>Total: ${money(total)}</h2><button class="danger" onclick="cart={};render()">Clear Cart</button></div></div>
+ <div class="card"><h2>Checkout</h2>
+ <label>Payment Method</label><select id="payMethod"><option value="Counter">Pay at Counter (Cash/UPI)</option><option value="Online">Online Payment (Demo)</option></select>
+ ${isTeacher?`<label>Approved Delivery Location</label><select id="deliveryLocation">${locations.map(l=>`<option>${esc(l)}</option>`).join("")}</select><div class="notice">Teacher orders will be marked for campus delivery.</div>`:`<div class="notice">Collect your order from the canteen using your token.</div>`}
+ <button class="success" onclick="placeOrder()">Place Order</button>
+ <p class="muted">Demo only: no real payment is processed.</p></div>`;
+}
+function changeQty(id,delta){
+ const m=menu.find(x=>x.id===id);
+ const next=(cart[id]||0)+delta;
+ if(next<=0)delete cart[id];
+ else if(next>m.stock)toast("Stock limit reached");
+ else cart[id]=next;
+ render();
+}
+function nextToken(){
+ const max=orders.reduce((a,o)=>Math.max(a,Number(o.tokenNumber)||100),100);
+ return max+1;
+}
+function placeOrder(){
+ const entries=Object.entries(cart).filter(([id,q])=>q>0);
+ if(!entries.length){toast("Your cart is empty");return}
+ for(const [id,q] of entries){
+  const m=menu.find(x=>x.id===Number(id));
+  if(!m||!m.active||m.stock<q){toast("Stock changed. Check your cart.");return}
+ }
+ const total=entries.reduce((sum,[id,q])=>sum+menu.find(m=>m.id===Number(id)).price*q,0);
+ const payment=document.getElementById("payMethod").value;
+ const isTeacher=currentUser.role==="Teacher";
+ const loc=isTeacher?document.getElementById("deliveryLocation").value:"";
+ // Online payment remains pending until a real gateway verifies payment.
+ const order={
+  id:Date.now()+"-"+Math.floor(Math.random()*10000),
+  tokenNumber:nextToken(),
+  token:"",
+  userId:currentUser.id,
+  userName:currentUser.name,
+  role:currentUser.role,
+  items:entries.map(([id,q])=>{const m=menu.find(x=>x.id===Number(id));return {id:m.id,name:m.name,price:m.price,qty:q}}),
+  total,
+  paymentMethod:payment,
+  paymentStatus:"Pending",
+  status:"Pending",
+  deliveryLocation:loc,
+  deliveryStatus:isTeacher?"Waiting for Preparation":"",
+  createdAt:new Date().toLocaleString()
+ };
+ order.token="SC"+order.tokenNumber;
+ orders.unshift(order);
+ entries.forEach(([id,q])=>{menu.find(m=>m.id===Number(id)).stock-=q});
+ persist();cart={};
+ document.getElementById("content").innerHTML=`<div class="card" style="text-align:center">
+ <div style="font-size:55px">🎉</div><h1>Order Placed!</h1>
+ <p>Your order token is</p><div style="font-size:40px;font-weight:900;color:var(--blue)">${order.token}</div>
+ <p>Total: <b>${money(total)}</b></p><p>Payment: <b>${payment}</b> · Status: <b>${order.paymentStatus}</b></p>
+ <p>Order status: <b>${order.status}</b></p>
+ ${isTeacher?`<p>Delivery location: ${esc(loc)}</p>`:""}
+ <div class="notice">Save your token and use it to track your order.</div>
+ <button onclick="goTab('orders')">Track My Order</button></div>`;
+ activeTab="cart";buildTabs();
+}
+
+function statusOptions(o){
+ return o.role==="Teacher"
+ ?["Pending","Preparing","Ready for Delivery","Out for Delivery","Delivered","Cancelled"]
+ :["Pending","Preparing","Ready for Pickup","Collected","Cancelled"];
+}
+function paymentBadge(s){return `<span class="badge">${esc(s)}</span>`}
+function orderItems(o){return o.items.map(i=>`${esc(i.name)} × ${i.qty}`).join(", ")}
+function ordersPage(){
+ let list=orders;
+ if(currentUser.role==="Student"||currentUser.role==="Teacher")list=orders.filter(o=>o.userId===currentUser.id);
+ if(!list.length)return `<div class="card"><h2>Orders</h2><p>No orders found.</p>${["Student","Teacher"].includes(currentUser.role)?`<button onclick="goTab('menu')">Order Food</button>`:""}</div>`;
+ return `<div class="card"><h2>${["Student","Teacher"].includes(currentUser.role)?"My Orders":"All Orders"}</h2><div class="table-wrap"><table><thead><tr><th>Token</th><th>Items</th><th>Total</th><th>Order Status</th><th>Payment</th><th>Details</th></tr></thead><tbody>
+ ${list.map(o=>`<tr><td><b>${esc(o.token)}</b><br><span class="muted">${esc(o.createdAt)}</span></td>
+ <td>${orderItems(o)}<br><span class="muted">${esc(o.userName)}</span></td><td>${money(o.total)}</td>
+ <td>${paymentBadge(o.status)}${o.deliveryStatus?`<br><span class="muted">${esc(o.deliveryStatus)}</span>`:""}</td>
+ <td>${paymentBadge(o.paymentStatus)}<br><span class="muted">${esc(o.paymentMethod)}</span></td>
+ <td><button class="secondary" onclick="showOrder('${o.id}')">View</button></td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function showOrder(id){
+ const o=orders.find(x=>x.id===id);if(!o)return;
+ alert("Token: "+o.token+"\nItems: "+o.items.map(i=>i.name+" x "+i.qty).join(", ")+"\nTotal: "+money(o.total)+"\nOrder status: "+o.status+"\nPayment status: "+o.paymentStatus+(o.deliveryLocation?"\nDelivery: "+o.deliveryLocation:""));
+}
+
+function kitchenPage(){
+ const list=orders.filter(o=>!["Collected","Delivered","Cancelled"].includes(o.status));
+ return `<div class="card"><div class="row"><h2>Kitchen Monitor</h2><button class="secondary" onclick="render()">Refresh</button></div>
+ <p class="muted">Staff can see customer and order details here. Update each order as it is prepared.</p>
+ ${list.length?list.map(o=>`<div class="food" style="margin-bottom:12px">
+ <div class="row"><h2>${esc(o.token)}</h2>${paymentBadge(o.status)}</div>
+ <p><b>Items:</b> ${orderItems(o)}</p><p><b>Total:</b> ${money(o.total)}</p>
+ <p><b>Payment:</b> ${esc(o.paymentMethod)} — ${esc(o.paymentStatus)}</p>
+ <p><b>Customer:</b> ${esc(o.userName)} (${esc(o.role)})</p>
+ <label>Update Order Status</label><select id="st_${o.id}">${statusOptions(o).map(s=>`<option ${s===o.status?"selected":""}>${s}</option>`).join("")}</select>
+ <button onclick="updateOrderStatus('${o.id}')">Save Status</button>
+ ${o.paymentMethod==="Counter"&&o.paymentStatus==="Pending"?`<button class="success" onclick="confirmPayment('${o.id}')">Confirm Counter Payment Received</button>`:""}
+ </div>`).join(""):`<p>No active orders.</p>`}</div>
+ <div class="card"><h2>Customer Token Monitor</h2><p class="muted">Only token and status are shown on this display.</p>
+ ${orders.length?orders.map(o=>`<div class="row" style="padding:10px;border-bottom:1px solid #eee"><h2>${esc(o.token)}</h2><span>${esc(o.status)}</span></div>`).join(""):"No orders yet."}</div>`;
+}
+function updateOrderStatus(id){
+ const o=orders.find(x=>x.id===id);if(!o)return;
+ const val=document.getElementById("st_"+id).value;
+ o.status=val;
+ if(o.role==="Teacher"){
+  if(val==="Preparing")o.deliveryStatus="Waiting for Preparation";
+  if(val==="Ready for Delivery")o.deliveryStatus="Ready for Delivery";
+  if(val==="Out for Delivery")o.deliveryStatus="Out for Delivery";
+  if(val==="Delivered")o.deliveryStatus="Delivered";
+ }
+ if(val==="Collected"||val==="Delivered")o.completedAt=new Date().toLocaleString();
+ persist();render();toast("Order status updated");
+}
+function confirmPayment(id){
+ const o=orders.find(x=>x.id===id);if(!o)return;
+ if(o.paymentMethod!=="Counter"||o.paymentStatus!=="Pending"){toast("Payment cannot be confirmed");return}
+ if(!confirm("Confirm that payment was actually received for "+o.token+"?"))return;
+ o.paymentStatus="Paid";o.paymentConfirmedBy=currentUser.id;
+ persist();render();toast("Counter payment confirmed");
+}
+function deliveryPage(){
+ const list=orders.filter(o=>o.role==="Teacher"&&["Ready for Delivery","Out for Delivery"].includes(o.status));
+ return `<div class="card"><div class="row"><h2>Delivery Tasks</h2><button class="secondary" onclick="render()">Refresh</button></div>
+ <p class="muted">Only teacher orders ready for delivery appear here.</p>
+ ${list.length?list.map(o=>`<div class="food" style="margin-bottom:12px"><div class="row"><h2>${esc(o.token)}</h2>${paymentBadge(o.status)}</div>
+ <p><b>Items:</b> ${orderItems(o)}</p><p><b>Deliver to:</b> ${esc(o.deliveryLocation)}</p>
+ <p><b>Teacher:</b> ${esc(o.userName)}</p><p><b>Payment:</b> ${esc(o.paymentStatus)}</p>
+ <button onclick="deliveryUpdate('${o.id}','Out for Delivery')">Mark Out for Delivery</button>
+ <button class="success" onclick="deliveryUpdate('${o.id}','Delivered')">Mark Delivered</button></div>`).join(""):`<p>No delivery tasks right now.</p>`}</div>`;
+}
+function deliveryUpdate(id,status){
+ const o=orders.find(x=>x.id===id);if(!o)return;
+ if(status==="Delivered"&&!confirm("Confirm this order has been delivered?"))return;
+ o.status=status;o.deliveryStatus=status;
+ if(status==="Delivered")o.completedAt=new Date().toLocaleString();
+ persist();render();toast("Delivery status updated");
+}
+
+function inventoryPage(){
+ return `<div class="card"><div class="row"><h2>Inventory & Availability</h2><button class="secondary" onclick="render()">Refresh</button></div>
+ <div class="table-wrap"><table><thead><tr><th>Item</th><th>Stock</th><th>Price</th><th>Availability</th><th>Update Stock</th></tr></thead><tbody>
+ ${menu.map(m=>`<tr><td>${esc(m.emoji)} ${esc(m.name)}</td><td>${m.stock} ${m.stock<=5?`<span class="badge">Low Stock</span>`:""}</td><td>${money(m.price)}</td>
+ <td>${m.active&&m.stock>0?"Available":"Unavailable"}</td><td><input id="stock_${m.id}" type="number" min="0" value="${m.stock}" style="width:90px;margin:0"><button onclick="updateStock(${m.id})">Save</button></td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function updateStock(id){
+ const input=document.getElementById("stock_"+id);
+ const value=Number(input.value);
+ if(!Number.isInteger(value)||value<0){toast("Enter a valid stock number");return}
+ menu.find(m=>m.id===id).stock=value;
+ persist();render();toast("Stock updated");
+}
+
+function overviewPage(){
+ const revenue=orders.filter(o=>o.paymentStatus==="Paid").reduce((s,o)=>s+o.total,0);
+ return `<div class="grid">
+ <div class="card"><div class="muted">Total Orders</div><div class="stat">${orders.length}</div></div>
+ <div class="card"><div class="muted">Active Orders</div><div class="stat">${orders.filter(o=>!["Collected","Delivered","Cancelled"].includes(o.status)).length}</div></div>
+ <div class="card"><div class="muted">Paid Order Value</div><div class="stat">${money(revenue)}</div></div>
+ <div class="card"><div class="muted">Menu Items</div><div class="stat">${menu.length}</div></div></div>
+ <div class="card"><h2>Admin Quick Actions</h2><div class="tabs">
+ <button onclick="goTab('menuadmin')">Manage Menu</button><button onclick="goTab('orders')">View Orders</button>
+ <button onclick="goTab('inventory')">Manage Inventory</button><button onclick="goTab('locations')">Delivery Locations</button><button onclick="goTab('reports')">Reports</button></div>
+ <p class="muted">Paid order value includes only orders marked Paid in this demo. It is not a bank reconciliation report.</p></div>`;
+}
+function menuAdminPage(){
+ return `<div class="card"><h2>Add Menu Item</h2>
+ <div class="grid"><div><label>Food Name</label><input id="newName" placeholder="e.g. Paneer Wrap"></div>
+ <div><label>Category</label><select id="newCategory"><option>Snacks</option><option>Meals</option><option>Drinks</option><option>Desserts</option></select></div>
+ <div><label>Price (₹)</label><input id="newPrice" type="number" min="1" placeholder="50"></div>
+ <div><label>Opening Stock</label><input id="newStock" type="number" min="0" value="10"></div>
+ <div><label>Emoji</label><input id="newEmoji" value="🍽️" maxlength="8"></div></div>
+ <button onclick="addMenuItem()">Add Item</button></div>
+ <div class="card"><h2>Manage Existing Items</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Price</th><th>Stock</th><th>Menu Status</th><th>Actions</th></tr></thead><tbody>
+ ${menu.map(m=>`<tr><td>${esc(m.emoji)} ${esc(m.name)}<br><span class="muted">${esc(m.category)}</span></td><td>${money(m.price)}</td><td>${m.stock}</td>
+ <td>${m.active?"Active":"Hidden"}</td><td><button class="secondary" onclick="editPrice(${m.id})">Edit Price</button> <button class="${m.active?"danger":"success"}" onclick="toggleMenu(${m.id})">${m.active?"Hide":"Show"}</button></td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function addMenuItem(){
+ const name=document.getElementById("newName").value.trim();
+ const price=Number(document.getElementById("newPrice").value);
+ const stock=Number(document.getElementById("newStock").value);
+ if(!name||!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0){toast("Enter a name, valid price and stock");return}
+ menu.push({id:Math.max(0,...menu.map(m=>m.id))+1,name,category:document.getElementById("newCategory").value,price,stock,emoji:document.getElementById("newEmoji").value||"🍽️",active:true});
+ persist();render();toast("Menu item added");
+}
+function editPrice(id){
+ const m=menu.find(x=>x.id===id);
+ const value=prompt("Enter new price for "+m.name,m.price);
+ if(value===null)return;
+ const price=Number(value);
+ if(!Number.isFinite(price)||price<=0){toast("Invalid price");return}
+ m.price=price;persist();render();toast("Price updated");
+}
+function toggleMenu(id){
+ const m=menu.find(x=>x.id===id);m.active=!m.active;persist();render();
+}
+function usersPage(){
+ return `<div class="card"><h2>Demo Users & Roles</h2><p class="notice">This panel documents the sample accounts. Real user creation and role assignment must be handled by a secure backend.</p>
+ <div class="table-wrap"><table><thead><tr><th>College ID</th><th>Name</th><th>Role</th><th>Demo Password</th></tr></thead><tbody>
+ ${USERS.map(u=>`<tr><td>${u.id}</td><td>${esc(u.name)}</td><td>${esc(u.role)}</td><td>1234</td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function locationsPage(){
+ return `<div class="card"><h2>Approved Teacher Delivery Locations</h2>
+ <p class="muted">These are demo locations. Actual locations should be approved by the college.</p>
+ <div class="grid"><div><label>New Location</label><input id="newLocation" placeholder="e.g. Library Block"></div>
+ <div style="align-self:end"><button onclick="addLocation()">Add Location</button></div></div>
+ ${locations.map((l,i)=>`<div class="row" style="padding:12px 0;border-bottom:1px solid #eee"><span>${esc(l)}</span><button class="danger" onclick="removeLocation(${i})">Remove</button></div>`).join("")}
+ </div>`;
+}
+function addLocation(){
+ const value=document.getElementById("newLocation").value.trim();
+ if(!value){toast("Enter a location");return}
+ if(locations.some(l=>l.toLowerCase()===value.toLowerCase())){toast("Location already exists");return}
+ locations.push(value);persist();render();toast("Location added");
+}
+function removeLocation(i){
+ if(!confirm("Remove this approved location?"))return;
+ locations.splice(i,1);persist();render();
+}
+function reportsPage(){
+ const paid=orders.filter(o=>o.paymentStatus==="Paid");
+ const pending=orders.filter(o=>o.paymentStatus==="Pending");
+ const cancelled=orders.filter(o=>o.status==="Cancelled");
+ const totalItems={};
+ orders.forEach(o=>o.items.forEach(i=>totalItems[i.name]=(totalItems[i.name]||0)+i.qty));
+ const top=Object.entries(totalItems).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ return `<div class="grid">
+ <div class="card"><div class="muted">Total Orders</div><div class="stat">${orders.length}</div></div>
+ <div class="card"><div class="muted">Paid Orders</div><div class="stat">${paid.length}</div></div>
+ <div class="card"><div class="muted">Pending Payments</div><div class="stat">${pending.length}</div></div>
+ <div class="card"><div class="muted">Cancelled Orders</div><div class="stat">${cancelled.length}</div></div></div>
+ <div class="card"><h2>Paid Order Value</h2><div class="stat">${money(paid.reduce((s,o)=>s+o.total,0))}</div><p class="muted">Demo total, not verified financial accounting.</p></div>
+ <div class="card"><h2>Popular Food Items</h2>${top.length?top.map(([name,q])=>`<div class="row" style="padding:10px 0;border-bottom:1px solid #eee"><span>${esc(name)}</span><b>${q} ordered</b></div>`).join(""):"No sales data yet."}
+ <button onclick="exportReport()">Download Order Report (CSV)</button></div>`;
+}
+function exportReport(){
+ const rows=[["Token","Customer ID","Customer","Role","Items","Total","Payment Method","Payment Status","Order Status","Delivery Location","Created At"]];
+ orders.forEach(o=>rows.push([o.token,o.userId,o.userName,o.role,o.items.map(i=>i.name+" x"+i.qty).join("; "),o.total,o.paymentMethod,o.paymentStatus,o.status,o.deliveryLocation,o.createdAt]));
+ const csv=rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");a.href=url;a.download="canteen-orders-report.csv";a.click();URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
